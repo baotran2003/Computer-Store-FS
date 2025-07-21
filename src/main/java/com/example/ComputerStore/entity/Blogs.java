@@ -11,7 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Blogs {
+public class Blogs extends BaseEntity {
     @Id
     @GeneratedValue
     @Column(columnDefinition = "BINARY(16)")

@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Otp {
+public class Otp extends BaseEntity {
     @Id
 
     @Column(nullable = false)

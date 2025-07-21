@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BuildPcCart {
+public class BuildPcCart extends BaseEntity {
 
     @Id
     @GeneratedValue

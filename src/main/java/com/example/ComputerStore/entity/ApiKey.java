@@ -11,7 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ApiKey {
+public class ApiKey extends BaseEntity {
 
     @Id
     @GeneratedValue

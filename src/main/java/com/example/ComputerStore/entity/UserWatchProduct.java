@@ -11,7 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserWatchProduct {
+public class UserWatchProduct extends  BaseEntity {
 
     @Id
     @GeneratedValue

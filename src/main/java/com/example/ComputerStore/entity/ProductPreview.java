@@ -11,7 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductPreview {
+public class ProductPreview extends BaseEntity {
 
     @Id
     @GeneratedValue
