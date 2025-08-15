@@ -18,21 +18,18 @@ public class Contact extends BaseEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-    @Column(name = "full_name", nullable = false)
-    private String fullName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
-    @Column(nullable = false)
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Column(name = "phone")
     private String phone;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String option1;
+    @Column(name = "message", columnDefinition = "TEXT", nullable = false)
+    private String message;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String option2;
-
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String option3;
-
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String option4;
+    @Column(name = "isRead", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isRead = false;
 }
