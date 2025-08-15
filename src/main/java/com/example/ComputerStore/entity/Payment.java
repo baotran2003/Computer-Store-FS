@@ -22,14 +22,6 @@ public class Payment extends BaseEntity {
     @Column(name = "id_payment", nullable = false)
     private String idPayment;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
     @Column
     private Integer quantity;
 
@@ -51,4 +43,13 @@ public class Payment extends BaseEntity {
 
     @Column(name = "type_payment", nullable = false)
     private String typePayment;
+
+    // Relationship
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 }

@@ -17,3 +17,4 @@ public interface CategoryService {
 
     List<Map<String, Object>> getCategoryByComponentTypes(UUID categoryId);
 }
+

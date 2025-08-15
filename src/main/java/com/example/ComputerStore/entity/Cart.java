@@ -18,14 +18,6 @@ public class Cart extends BaseEntity {
     @Column(columnDefinition = "BINARY(16)")
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
     @Column
     private Integer quantity;
 
@@ -40,4 +32,13 @@ public class Cart extends BaseEntity {
 
     @Column(name = "total_price", nullable = false)
     private Integer totalPrice;
+
+    // Relationship
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 }

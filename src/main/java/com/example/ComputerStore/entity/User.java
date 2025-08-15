@@ -11,7 +11,6 @@ import java.util.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class User extends BaseEntity {
 
     @Id
@@ -41,6 +40,7 @@ public class User extends BaseEntity {
     @Column(name = "type_login", nullable = false)
     private TypeLogin typeLogin;
 
+    // Relationship
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ApiKey apiKey;
 

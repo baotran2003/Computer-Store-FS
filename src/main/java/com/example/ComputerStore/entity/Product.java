@@ -4,6 +4,7 @@ import com.example.ComputerStore.enumeric.ComponentType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Entity
@@ -22,8 +23,8 @@ public class Product extends BaseEntity {
     @Column(nullable = false, length = 500)
     private String name;
 
-    @Column(nullable = false)
-    private Float price;
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
@@ -69,6 +70,7 @@ public class Product extends BaseEntity {
     @Column(name = "component_type", nullable = false)
     private ComponentType componentType;
 
+    // Relationship
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Cart> carts = new ArrayList<>();
 
