@@ -17,7 +17,6 @@ import java.util.UUID;
 public interface ProductRepository extends JpaRepository<Product, UUID> {
     // Tim products theo category
     List<Product> findByCategoryId(UUID categoryId);
-
     Page<Product> findByCategoryId(UUID categoryId, Pageable pageable);
 
     // Tim products theo name
@@ -29,12 +28,10 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     // tim products theo price range
     List<Product> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice);
-
     Page<Product> findByPriceBetween(BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable);
 
     // Tim products co stock > 0
     List<Product> findByStockGreaterThan(Integer stock);
-
     Page<Product> findByStockGreaterThan(Integer stock, Pageable pageable);
 
     // Tim products co discount
@@ -46,7 +43,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
 
     // Tìm products theo componentType
     List<Product> findByComponentType(String componentType);
-
     Page<Product> findByComponentType(String componentType, Pageable pageable);
 
     // Tìm products với search filters
@@ -63,24 +59,22 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
                                   @Param("componentType") String componentType,
                                   Pageable pageable);
 
-    // tim products bán chạy (dựa vào SL trong payment)
+    // Top selling products (based on payment quantity)
     @Query("SELECT p FROM Product p LEFT JOIN p.payments pay " +
-            "GROUP BY p ORDER BY COALESCE(SUM(pay.quantity), 0) DESC")
+           "GROUP BY p ORDER BY COALESCE(SUM(pay.quantity), 0) DESC")
     List<Product> findTopSellingProducts(Pageable pageable);
 
-    // Products moi nhat
+    // Products mới nhất
     List<Product> findTop10ByOrderByCreatedAtDesc();
 
     // Count products by category
     @Query("SELECT COUNT(p) FROM Product p WHERE p.category.id = :categoryId")
     long countByCategoryId(@Param("categoryId") UUID categoryId);
 
-    // Tim PC builds (products co du components)
-    @Query("SELECT p FROM Product p " +
-            "WHERE p.cpu IS NOT NULL " +
-            "AND p.main IS NOT NULL " +
-            "AND p.ram IS NOT NULL " +
-            "AND p.storage IS NOT NULL " +
+    // Tìm PC builds (products có đầy đủ components)
+    @Query("SELECT p FROM Product p WHERE " +
+            "p.cpu IS NOT NULL AND p.main IS NOT NULL " +
+            "AND p.ram IS NOT NULL AND p.storage IS NOT NULL " +
             "AND p.gpu IS NOT NULL")
     List<Product> findPcBuilds();
 
@@ -94,4 +88,28 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     List<Product> findByCaseComputer(String caseComputer);
     List<Product> findByCoolers(String coolers);
 
+    // ========== BỔ SUNG CHO NODE.JS FEATURES ==========
+    
+    // Get category stats for pie chart
+    @Query("SELECT c.name, COUNT(p) FROM Product p JOIN p.category c GROUP BY c.name")
+    List<Object[]> getCategoryStats();
+    
+    // Search products by multiple criteria (for advanced search)
+    @Query("SELECT p FROM Product p WHERE " +
+           "(:searchText IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :searchText, '%')) OR " +
+           "LOWER(p.description) LIKE LOWER(CONCAT('%', :searchText, '%'))) AND " +
+           "(:categoryId IS NULL OR p.category.id = :categoryId) AND " +
+           "(:componentType IS NULL OR p.componentType = :componentType)")
+    Page<Product> searchProducts(@Param("searchText") String searchText,
+                                 @Param("categoryId") UUID categoryId,
+                                 @Param("componentType") String componentType,
+                                 Pageable pageable);
+    
+    // Hot sale products (high discount)
+    @Query("SELECT p FROM Product p WHERE p.discount >= :minDiscount ORDER BY p.discount DESC")
+    List<Product> findHotSaleProducts(@Param("minDiscount") BigDecimal minDiscount, Pageable pageable);
+    
+    // PC build compatible products by component type
+    @Query("SELECT p FROM Product p WHERE p.componentType = :componentType AND p.stock > 0")
+    List<Product> findPcBuildComponents(@Param("componentType") String componentType);
 }

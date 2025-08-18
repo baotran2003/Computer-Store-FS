@@ -4,6 +4,7 @@ import com.example.ComputerStore.enumeric.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -15,14 +16,13 @@ import java.util.UUID;
 public class Payment extends BaseEntity {
 
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "BINARY(16)")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "id_payment", nullable = false)
     private String idPayment;
 
-    @Column
+    @Column(nullable = false)
     private Integer quantity;
 
     @Column(name = "full_name")
@@ -34,12 +34,12 @@ public class Payment extends BaseEntity {
     @Column
     private String address;
 
-    @Column(name = "total_price", nullable = false)
-    private Integer totalPrice;
+    @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal totalPrice;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PaymentStatus status;
+    private PaymentStatus status = PaymentStatus.PENDING;
 
     @Column(name = "type_payment", nullable = false)
     private String typePayment;

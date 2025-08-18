@@ -6,16 +6,16 @@ import lombok.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "api_key")
+@Table(name = "apiKey")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(callSuper = true)
 public class ApiKey extends BaseEntity {
 
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "BINARY(16)")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "public_key", columnDefinition = "TEXT", nullable = false)

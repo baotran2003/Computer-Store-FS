@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface PaymentRepository extends JpaRepository<Payment, Long> {
+public interface PaymentRepository extends JpaRepository<Payment, UUID> {
     // Tim payment theo user
     List<Payment> findByUserId(UUID userId);
 
@@ -79,4 +79,20 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
             "GROUP BY p.product.id, p.product.name " +
             "ORDER BY totalSold DESC")
     List<Object[]> getBestSellingProducts(Pageable pageable);
+
+    // ========== CẦN BỔ SUNG CHO NODE.JS FEATURES ==========
+    
+    // Get recent orders (top 5)
+    List<Payment> findTop5ByOrderByCreatedAtDesc();
+    
+    // Get order stats by date range
+    @Query("SELECT DATE(p.createdAt) as date, COUNT(p) as count FROM Payment p " +
+           "WHERE p.createdAt BETWEEN :startDate AND :endDate " +
+           "GROUP BY DATE(p.createdAt) ORDER BY date")
+    List<Object[]> getOrderStatsByDateRange(@Param("startDate") LocalDateTime startDate,
+                                           @Param("endDate") LocalDateTime endDate);
+    
+    // Get order status stats for pie chart
+    @Query("SELECT p.status, COUNT(p) FROM Payment p GROUP BY p.status")
+    List<Object[]> getOrderStatusStats();
 }

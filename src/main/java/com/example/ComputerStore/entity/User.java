@@ -11,11 +11,11 @@ import java.util.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity {
 
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "BINARY(16)")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "full_name", nullable = false)
@@ -33,8 +33,8 @@ public class User extends BaseEntity {
     @Column
     private String password;
 
-    @Column(name = "is_admin", nullable = false)
-    private String isAdmin;
+    @Column(name = "is_admin", nullable = false, columnDefinition = "VARCHAR(1) DEFAULT '0'")
+    private String isAdmin = "0";
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type_login", nullable = false)

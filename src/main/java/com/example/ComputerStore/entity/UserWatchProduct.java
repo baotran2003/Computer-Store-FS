@@ -6,16 +6,15 @@ import lombok.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "userWatchProduct")
+@Table(name = "user_watch_products")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserWatchProduct extends  BaseEntity {
+public class UserWatchProduct extends BaseEntity {
 
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "BINARY(16)")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne

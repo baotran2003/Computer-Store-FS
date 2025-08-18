@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "productPreview")
+@Table(name = "product_previews")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,8 +14,7 @@ import java.util.UUID;
 public class ProductPreview extends BaseEntity {
 
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "BINARY(16)")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne

@@ -13,17 +13,19 @@ import java.util.UUID;
 @Builder
 public class Blogs extends BaseEntity {
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "BINARY(16)")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false)
     private String title;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String content;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
-    @Column(nullable = false)
+    @Column
     private String image;
+
+    @Column(columnDefinition = "LONGTEXT", nullable = false)
+    private String content;
 }
 

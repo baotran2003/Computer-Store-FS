@@ -3,10 +3,11 @@ package com.example.ComputerStore.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "cart")
+@Table(name = "carts")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,11 +15,10 @@ import java.util.UUID;
 public class Cart extends BaseEntity {
 
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "BINARY(16)")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column
+    @Column(nullable = false)
     private Integer quantity;
 
     @Column(name = "full_name")
@@ -30,8 +30,8 @@ public class Cart extends BaseEntity {
     @Column
     private String address;
 
-    @Column(name = "total_price", nullable = false)
-    private Integer totalPrice;
+    @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal totalPrice;
 
     // Relationship
     @ManyToOne

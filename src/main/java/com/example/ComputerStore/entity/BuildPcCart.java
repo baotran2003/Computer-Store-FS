@@ -1,13 +1,13 @@
 package com.example.ComputerStore.entity;
 
-import com.example.ComputerStore.enumeric.ComponentType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "buildPcCart")
+@Table(name = "build_pc_carts")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,26 +15,31 @@ import java.util.UUID;
 public class BuildPcCart extends BaseEntity {
 
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "BINARY(16)")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "component_type", nullable = false)
-    private ComponentType componentType;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
 
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(name = "total_price", nullable = false)
-    private Integer totalPrice;
+    @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
+    private BigDecimal totalPrice;
+
+    @Column(name = "full_name")
+    private String fullName;
+
+    @Column
+    private String phone;
+
+    @Column
+    private String address;
+
+    // Relationships
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
 }

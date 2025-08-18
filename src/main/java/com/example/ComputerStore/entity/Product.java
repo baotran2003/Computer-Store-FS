@@ -1,6 +1,5 @@
 package com.example.ComputerStore.entity;
 
-import com.example.ComputerStore.enumeric.ComponentType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,8 +15,7 @@ import java.util.*;
 public class Product extends BaseEntity {
 
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "BINARY(16)")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false, length = 500)
@@ -29,15 +27,11 @@ public class Product extends BaseEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
 
-    @Column(nullable = false)
-    private Integer discount;
+    @Column(nullable = false, precision = 5, scale = 2, columnDefinition = "DECIMAL(5,2) DEFAULT 0")
+    private BigDecimal discount = BigDecimal.ZERO;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String images;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
 
     @Column(nullable = false)
     private Integer stock;
@@ -66,11 +60,14 @@ public class Product extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String coolers;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "component_type", nullable = false)
-    private ComponentType componentType;
+    private String componentType;
 
     // Relationship
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Cart> carts = new ArrayList<>();
 

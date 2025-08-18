@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.*;
 
 @Entity
-@Table(name = "category")
+@Table(name = "categories")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,14 +14,13 @@ import java.util.*;
 public class Category extends BaseEntity {
 
     @Id
-    @GeneratedValue
-    @Column(columnDefinition = "BINARY(16)")
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private String image;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)

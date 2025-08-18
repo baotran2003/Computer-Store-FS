@@ -7,11 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, UUID> {
     // Tim user theo email
     Optional<User> findByEmail(String email);
 
@@ -45,4 +47,27 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     // Count users by type login
     @Query("SELECT COUNT(u) FROM User u WHERE u.typeLogin = :typeLogin")
     long countByTypeLogin(@Param("typeLogin") TypeLogin typeLogin);
+
+    // ========== CẦN BỔ SUNG CHO DASHBOARD STATS ==========
+    
+    // Count admin users
+    @Query("SELECT COUNT(u) FROM User u WHERE u.isAdmin = '1'")
+    long countAdminUsers();
+    
+    // Check if phone exists
+    boolean existsByPhone(String phone);
+    
+    // Find first by phone
+    Optional<User> findFirstByPhone(String phone);
+    
+    // Get latest users
+    List<User> findTop10ByOrderByCreatedAtDesc();
+    
+    // Count Google users
+    @Query("SELECT COUNT(u) FROM User u WHERE u.typeLogin = 'google'")
+    long countGoogleUsers();
+    
+    // Count Email users  
+    @Query("SELECT COUNT(u) FROM User u WHERE u.typeLogin = 'email'")
+    long countEmailUsers();
 }
