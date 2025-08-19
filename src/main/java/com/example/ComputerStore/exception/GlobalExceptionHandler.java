@@ -1,6 +1,6 @@
 package com.example.ComputerStore.exception;
 
-import com.example.ComputerStore.entity.payload.ApiResponse;
+import com.example.ComputerStore.dto.response.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +10,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ErrorResponse.class)
     public ResponseEntity<ApiResponse<?>> handleCustomError(ErrorResponse ex) {
         ApiResponse<?> response = ApiResponse.builder()
-                .status(ex.getStatus().value())
                 .error(ex.getStatus().getReasonPhrase())
                 .message(ex.getMessage())
                 .data(null)
@@ -22,7 +21,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<?>> handleGenericError(Exception ex) {
         ApiResponse<?> response = ApiResponse.builder()
-                .status(500)
                 .error("Internal Server Error")
                 .message(ex.getMessage())
                 .data(null)

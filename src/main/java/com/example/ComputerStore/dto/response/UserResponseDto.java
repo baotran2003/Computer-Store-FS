@@ -24,7 +24,7 @@ public class UserResponseDto {
     private String isAdmin;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    
+
     // Convert from Entity to DTO
     public static UserResponseDto fromEntity(User user) {
         return UserResponseDto.builder()
