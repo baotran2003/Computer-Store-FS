@@ -29,6 +29,6 @@ public class Contact extends BaseEntity {
     @Column(name = "message", columnDefinition = "TEXT", nullable = false)
     private String message;
 
-    @Column(name = "isRead", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    @Column(name = "is_read", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean isRead = false;
 }

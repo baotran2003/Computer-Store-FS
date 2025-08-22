@@ -20,12 +20,12 @@ public class Otp extends BaseEntity {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "otpCode", nullable = false)
+    @Column(name = "otp_code", nullable = false)
     private String otpCode;
 
-    @Column(name = "expiresAt", nullable = false)
+    @Column(name = "expires_at", nullable = false)
     private LocalDateTime expiresAt;
 
-    @Column(name = "isUsed", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    @Column(name = "is_used", columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean isUsed = false;
 }

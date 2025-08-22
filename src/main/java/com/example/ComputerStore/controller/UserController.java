@@ -47,10 +47,7 @@ public class UserController {
                     .body(ApiResponse.error(e.getMessage()));
         }
     }
-    
-    /**
-     * Get user by ID - GET /api/users/{id}
-     */
+
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<UserResponseDto>> getUserById(@PathVariable UUID id) {
         try {
@@ -65,10 +62,7 @@ public class UserController {
                     .body(ApiResponse.error(e.getMessage()));
         }
     }
-    
-    /**
-     * Get user by email - GET /api/users/email/{email}
-     */
+
     @GetMapping("/email/{email}")
     public ResponseEntity<ApiResponse<UserResponseDto>> getUserByEmail(@PathVariable String email) {
         try {
@@ -129,10 +123,7 @@ public class UserController {
     }
     
     // ========== VALIDATION ENDPOINTS ==========
-    
-    /**
-     * Check if email exists - GET /api/users/validate/email
-     */
+
     @GetMapping("/validate/email")
     public ResponseEntity<ApiResponse<Boolean>> checkEmailExists(@RequestParam String email) {
         try {
@@ -145,10 +136,7 @@ public class UserController {
                     .body(ApiResponse.error(e.getMessage()));
         }
     }
-    
-    /**
-     * Check if phone exists - GET /api/users/validate/phone
-     */
+
     @GetMapping("/validate/phone")
     public ResponseEntity<ApiResponse<Boolean>> checkPhoneExists(@RequestParam String phone) {
         try {

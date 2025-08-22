@@ -25,12 +25,7 @@ public class AuthController {
     
     private final AuthenticationService authenticationService;
     private final PasswordService passwordService;
-    
-    // ========== AUTHENTICATION ENDPOINTS ==========
-    
-    /**
-     * Register new user - POST /api/auth/register
-     */
+
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<LoginResponseDto>> register(@Valid @RequestBody UserRegistrationDto registrationDto) {
         try {
@@ -50,10 +45,7 @@ public class AuthController {
                     .body(ApiResponse.error(e.getMessage()));
         }
     }
-    
-    /**
-     * User login - POST /api/auth/login
-     */
+
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponseDto>> login(@Valid @RequestBody UserLoginDto loginDto) {
         try {
@@ -101,10 +93,7 @@ public class AuthController {
                     .body(ApiResponse.error(e.getMessage()));
         }
     }
-    
-    /**
-     * Refresh token - POST /api/auth/refresh-token
-     */
+
     @PostMapping("/refresh-token")
     public ResponseEntity<ApiResponse<String>> refreshToken(HttpServletRequest request) {
         try {
@@ -126,10 +115,7 @@ public class AuthController {
                     .body(ApiResponse.error(e.getMessage()));
         }
     }
-    
-    /**
-     * User logout - POST /api/auth/logout
-     */
+
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<String>> logout(HttpServletRequest request) {
         try {
@@ -151,17 +137,12 @@ public class AuthController {
                     .body(ApiResponse.error(e.getMessage()));
         }
     }
-    
-    // ========== PASSWORD MANAGEMENT ENDPOINTS ==========
-    
-    /**
-     * Forgot password - POST /api/auth/forgot-password
-     */
+
     @PostMapping("/forgot-password")
-    public ResponseEntity<ApiResponse<Void>> forgotPassword(@RequestParam String email) {
+    public ResponseEntity<ApiResponse<String>> forgotPassword(@RequestParam String email) {
         try {
-            passwordService.forgotPassword(email);
-            return ResponseEntity.ok(ApiResponse.success("Mã OTP đã được gửi đến email của bạn"));
+            String refreshToken = passwordService.forgotPassword(email);
+            return ResponseEntity.ok(ApiResponse.<String>success("Mã OTP đã được gửi đến email của bạn", refreshToken));
             
         } catch (Exception e) {
             log.error("Forgot password error: ", e);
@@ -169,10 +150,7 @@ public class AuthController {
                     .body(ApiResponse.error(e.getMessage()));
         }
     }
-    
-    /**
-     * Reset password - POST /api/auth/reset-password
-     */
+
     @PostMapping("/reset-password")
     public ResponseEntity<ApiResponse<Void>> resetPassword(
             @RequestParam String otp,

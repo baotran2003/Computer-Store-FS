@@ -5,7 +5,7 @@ public interface PasswordService {
     /**
      * Send forgot password OTP to email
      */
-    void forgotPassword(String email);
+    String forgotPassword(String email);
     
     /**
      * Reset password using OTP and token
