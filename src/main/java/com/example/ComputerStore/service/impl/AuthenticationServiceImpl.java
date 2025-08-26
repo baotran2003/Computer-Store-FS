@@ -4,6 +4,7 @@ import com.example.ComputerStore.dto.response.LoginResponseDto;
 import com.example.ComputerStore.entity.ApiKey;
 import com.example.ComputerStore.entity.User;
 import com.example.ComputerStore.enumeric.TypeLogin;
+import com.example.ComputerStore.mapper.UserMapper;
 import com.example.ComputerStore.repository.ApiKeyRepository;
 import com.example.ComputerStore.repository.UserRepository;
 import com.example.ComputerStore.service.AuthenticationService;
@@ -13,7 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,13 +32,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     
     private final UserRepository userRepository;
     private final ApiKeyRepository apiKeyRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final UserMapper userMapper;
     private final ObjectMapper objectMapper = new ObjectMapper();
     
     @Value("${app.encryption.secret}")
     private String encryptionSecret;
     
+    // ==========  ĐĂNG KÝ TÀI KHOẢN MỚI  ==========
+
     @Override
     @Transactional
     public LoginResponseDto register(String fullName, String phone, String address, String email, String password) {
@@ -71,7 +75,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // Create API key
         createApiKeyForUser(savedUser.getId());
         
-        // Generate tokens like NodeJS
+        // Generate tokens
         String role = "1".equals(savedUser.getIsAdmin()) ? "ADMIN" : "USER";
         String token = jwtService.generateTokenWithClaims(
             savedUser.getEmail(), 
@@ -81,9 +85,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String refreshToken = jwtService.generateRefreshToken(savedUser.getEmail());
         
         log.info("User registered successfully with ID: {}", savedUser.getId());
-        return LoginResponseDto.fromUserAndTokens(savedUser, token, refreshToken);
+        return userMapper.toLoginResponseDto(savedUser, token, refreshToken);
     }
     
+    // ==========  ĐĂNG NHẬP BẰNG EMAIL/PASSWORD  ==========
+
     @Override
     @Transactional(readOnly = true)
     public LoginResponseDto login(String email, String password) {
@@ -115,7 +121,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // Create API key if not exists
         createApiKeyForUser(user.getId());
         
-        // Generate tokens like NodeJS
+        // Generate tokens
         String role = "1".equals(user.getIsAdmin()) ? "ADMIN" : "USER";
         String token = jwtService.generateTokenWithClaims(
             user.getEmail(), 
@@ -125,12 +131,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String refreshToken = jwtService.generateRefreshToken(user.getEmail());
         
         log.info("User login successful: {}", user.getId());
-        return LoginResponseDto.fromUserAndTokens(user, token, refreshToken);
+        return userMapper.toLoginResponseDto(user, token, refreshToken);
     }
     
+// ==========  ĐĂNG NHẬP BẰNG GOOGLE  ==========
+
     @Override
     @Transactional
-    public User loginGoogle(String credential) {
+    public LoginResponseDto loginGoogle(String credential) {
         log.info("Google login attempt");
         
         // Decode Google credential (JWT token)
@@ -160,7 +168,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // Create API key
         createApiKeyForUser(user.getId());
         
-        return user;
+        // Generate tokens giống như email login
+        String role = "1".equals(user.getIsAdmin()) ? "ADMIN" : "USER";
+        String token = jwtService.generateTokenWithClaims(
+            user.getEmail(), 
+            role, 
+            Long.valueOf(user.getId().toString().hashCode())
+        );
+        String refreshToken = jwtService.generateRefreshToken(user.getEmail());
+        
+        log.info("Google login successful with tokens: {}", user.getId());
+        return userMapper.toLoginResponseDto(user, token, refreshToken);
     }
     
     @Override

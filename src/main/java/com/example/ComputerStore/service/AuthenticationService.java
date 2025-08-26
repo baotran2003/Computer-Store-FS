@@ -1,7 +1,6 @@
 package com.example.ComputerStore.service;
 
 import com.example.ComputerStore.dto.response.LoginResponseDto;
-import com.example.ComputerStore.entity.User;
 
 import java.util.UUID;
 
@@ -20,7 +19,7 @@ public interface AuthenticationService {
     /**
      * Google OAuth login
      */
-    User loginGoogle(String credential);
+    LoginResponseDto loginGoogle(String credential);
     
     /**
      * Get authenticated user info (encrypted)

@@ -5,6 +5,7 @@ import com.example.ComputerStore.dto.response.*;
 import com.example.ComputerStore.entity.User;
 import com.example.ComputerStore.service.AuthenticationService;
 import com.example.ComputerStore.service.PasswordService;
+import com.example.ComputerStore.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ public class AuthController {
     
     private final AuthenticationService authenticationService;
     private final PasswordService passwordService;
+    private final UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<LoginResponseDto>> register(@Valid @RequestBody UserRegistrationDto registrationDto) {
@@ -64,12 +66,11 @@ public class AuthController {
      * Google login - POST /api/auth/google
      */
     @PostMapping("/google")
-    public ResponseEntity<ApiResponse<UserResponseDto>> loginGoogle(@RequestBody String credential) {
+    public ResponseEntity<ApiResponse<LoginResponseDto>> loginGoogle(@RequestBody String credential) {
         try {
-            User user = authenticationService.loginGoogle(credential);
-            UserResponseDto userResponse = UserResponseDto.fromEntity(user);
+            LoginResponseDto loginResponse = authenticationService.loginGoogle(credential);
             
-            return ResponseEntity.ok(ApiResponse.success("Đăng nhập Google thành công", userResponse));
+            return ResponseEntity.ok(ApiResponse.success("Đăng nhập Google thành công", loginResponse));
             
         } catch (Exception e) {
             log.error("Google login error: ", e);
@@ -82,10 +83,10 @@ public class AuthController {
      * User authentication - GET /api/auth/user/{userId}
      */
     @GetMapping("/user/{userId}")
-    public ResponseEntity<ApiResponse<String>> authUser(@PathVariable UUID userId) {
+    public ResponseEntity<ApiResponse<User>> authUser(@PathVariable UUID userId) {
         try {
-            String authInfo = authenticationService.authUser(userId);
-            return ResponseEntity.ok(ApiResponse.success("Xác thực thành công", authInfo));
+            User user = userService.getUserById(userId);
+            return ResponseEntity.ok(ApiResponse.success("Xác thực thành công", user));
             
         } catch (Exception e) {
             log.error("Auth error: ", e);

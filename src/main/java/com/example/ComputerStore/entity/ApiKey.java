@@ -1,5 +1,6 @@
 package com.example.ComputerStore.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,6 +33,7 @@ public class ApiKey extends BaseEntity {
     // Relationship để có thể join khi cần
     @OneToOne
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    @JsonIgnore
     private User user;
 
 }

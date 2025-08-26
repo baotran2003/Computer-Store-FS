@@ -3,6 +3,7 @@ package com.example.ComputerStore.controller;
 import com.example.ComputerStore.dto.request.*;
 import com.example.ComputerStore.dto.response.*;
 import com.example.ComputerStore.entity.User;
+import com.example.ComputerStore.mapper.UserMapper;
 import com.example.ComputerStore.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 public class UserController {
     
     private final UserService userService;
+    private final UserMapper userMapper;
     
     // ========== USER MANAGEMENT ENDPOINTS ==========
     
@@ -35,9 +36,7 @@ public class UserController {
     public ResponseEntity<ApiResponse<List<UserResponseDto>>> getAllUsers() {
         try {
             List<User> users = userService.getUsers();
-            List<UserResponseDto> userResponses = users.stream()
-                    .map(UserResponseDto::fromEntity)
-                    .collect(Collectors.toList());
+            List<UserResponseDto> userResponses = userMapper.toDtoList(users);
             
             return ResponseEntity.ok(ApiResponse.success("Lấy danh sách users thành công", userResponses));
             
@@ -52,7 +51,7 @@ public class UserController {
     public ResponseEntity<ApiResponse<UserResponseDto>> getUserById(@PathVariable UUID id) {
         try {
             User user = userService.getUserById(id);
-            UserResponseDto userResponse = UserResponseDto.fromEntity(user);
+            UserResponseDto userResponse = userMapper.toDto(user);
             
             return ResponseEntity.ok(ApiResponse.success("Lấy thông tin user thành công", userResponse));
             
@@ -67,7 +66,7 @@ public class UserController {
     public ResponseEntity<ApiResponse<UserResponseDto>> getUserByEmail(@PathVariable String email) {
         try {
             User user = userService.getUserByEmail(email);
-            UserResponseDto userResponse = UserResponseDto.fromEntity(user);
+            UserResponseDto userResponse = userMapper.toDto(user);
             
             return ResponseEntity.ok(ApiResponse.success("Lấy thông tin user thành công", userResponse));
             

@@ -25,18 +25,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
 
+    // Xử lý mỗi Request
     @Override
     protected void doFilterInternal(
-            @NonNull HttpServletRequest request,
-            @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain
+            @NonNull HttpServletRequest request,        // INPUT: HTTP Request
+            @NonNull HttpServletResponse response,   // OUTPUT: HTTP Response
+            @NonNull FilterChain filterChain                // Chuỗi Filter
     ) throws ServletException, IOException {
 
+        // Lấy Authorization header
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
 
-        // Skip filter for public endpoints
+        
         String requestPath = request.getRequestURI();
         if (isPublicEndpoint(requestPath)) {
             filterChain.doFilter(request, response);
@@ -50,12 +52,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         try {
-            jwt = authHeader.substring(7);
+            // Extract token và email từ header
+            jwt = authHeader.substring(7);  // Bỏ "Bearer"
             userEmail = jwtService.extractUsername(jwt);
 
+            // Validate Token
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 
-                // Validate token
                 if (jwtService.isTokenValid(jwt, userEmail)) {
                     
                     // Extract role from token
@@ -74,6 +77,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     );
                     
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                    // Set SecurityContext 
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                     
                     log.debug("JWT authentication successful for user: {} with role: {}", userEmail, role);

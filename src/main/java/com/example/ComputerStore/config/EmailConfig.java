@@ -23,21 +23,23 @@ public class EmailConfig {
     @Value("${spring.mail.password}")
     private String mailPassword;
 
+    // Tạo Bean JavaMailSender để gửi email
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+
+        // config SMTP
         mailSender.setHost(mailHost);
         mailSender.setPort(mailPort);
-        
         mailSender.setUsername(mailUsername);
         mailSender.setPassword(mailPassword);
         
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true");
+        props.put("mail.smtp.auth", "true");    // bật xác thực
+        props.put("mail.smtp.starttls.enable", "true"); // bật mã hóa TLS
+        props.put("mail.debug", "true");    
         
-        return mailSender;
+        return mailSender; // Object để gửi mail
     }
 }

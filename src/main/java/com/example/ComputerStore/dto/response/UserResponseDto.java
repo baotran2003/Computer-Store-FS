@@ -1,6 +1,5 @@
 package com.example.ComputerStore.dto.response;
 
-import com.example.ComputerStore.entity.User;
 import com.example.ComputerStore.enumeric.TypeLogin;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,19 +23,6 @@ public class UserResponseDto {
     private String isAdmin;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
-    // Convert from Entity to DTO
-    public static UserResponseDto fromEntity(User user) {
-        return UserResponseDto.builder()
-                .id(user.getId())
-                .fullName(user.getFullName())
-                .phone(user.getPhone())
-                .address(user.getAddress())
-                .email(user.getEmail())
-                .typeLogin(user.getTypeLogin())
-                .isAdmin(user.getIsAdmin())
-                .createdAt(user.getCreatedAt())
-                .updatedAt(user.getUpdatedAt())
-                .build();
-    }
+    
+    // Note: Conversion logic moved to UserMapper for better separation of concerns
 }

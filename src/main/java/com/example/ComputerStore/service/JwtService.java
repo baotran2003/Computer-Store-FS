@@ -16,15 +16,16 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    @Value("${app.jwt.secret:mySecretKey12345678901234567890}")
+    @Value("${app.jwt.secret}")
     private String secretKey;
 
-    @Value("${app.jwt.expiration:86400000}") // 24 hours
+    @Value("${app.jwt.expiration}") // 24 hours
     private long jwtExpiration;
 
-    @Value("${app.jwt.refresh-expiration:604800000}") // 7 days
+    @Value("${app.jwt.refresh-expiration}") // 7 days
     private long refreshExpiration;
 
+    // ==========  METHODS ĐỌC TOKEN MỚI  ==========
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
@@ -38,6 +39,7 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
+    // ==========  METHODS TẠO TOKEN MỚI  ==========
     public String generateToken(String username) {
         return generateToken(new HashMap<>(), username);
     }
@@ -55,16 +57,16 @@ public class JwtService {
             String username,
             long expiration
     ) {
-        return Jwts
-                .builder()
-                .setClaims(extraClaims)
-                .setSubject(username)
+        return Jwts.builder()
+                .setClaims(extraClaims) // custom data
+                .setSubject(username)   // email
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
-                .compact();
+                .compact(); // Tạo JWT String
     }
 
+    // ==========  METHODS VALIDATE TOKEN  ==========
     public boolean isTokenValid(String token, String username) {
         final String tokenUsername = extractUsername(token);
         return (tokenUsername.equals(username)) && !isTokenExpired(token);

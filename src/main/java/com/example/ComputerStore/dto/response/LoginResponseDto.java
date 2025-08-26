@@ -1,6 +1,5 @@
 package com.example.ComputerStore.dto.response;
 
-import com.example.ComputerStore.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,11 +14,5 @@ public class LoginResponseDto {
     private String token;
     private String refreshToken;
     
-    public static LoginResponseDto fromUserAndTokens(User user, String token, String refreshToken) {
-        return LoginResponseDto.builder()
-                .user(UserResponseDto.fromEntity(user))
-                .token(token)
-                .refreshToken(refreshToken)
-                .build();
-    }
+    // Note: Conversion logic moved to UserMapper for better separation of concerns
 }
