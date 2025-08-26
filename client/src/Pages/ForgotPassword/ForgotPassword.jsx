@@ -27,7 +27,9 @@ function ForgotPassword() {
 
     const handleSendEmail = async (values) => {
         try {
-            await requestForgotPassword(values);
+            const response = await requestForgotPassword(values.email);
+            // Save token to cookie
+            Cookies.set('tokenResetPassword', response.data, { expires: 1 }); // expires in 1 day
             message.success('Mã OTP đã được gửi đến email của bạn!');
             setIsEmailSent(true);
         } catch (error) {
@@ -37,7 +39,16 @@ function ForgotPassword() {
 
     const handleResetPassword = async (values) => {
         try {
-            await requestResetPassword(values);
+            const token = Cookies.get('tokenResetPassword');
+            const resetData = {
+                ...values,
+                token: token
+            };
+            await requestResetPassword(resetData);
+            
+            // Clear token after successful reset
+            Cookies.remove('tokenResetPassword');
+            
             message.success('Đặt lại mật khẩu thành công!');
             setTimeout(() => {
                 navigate('/login');
