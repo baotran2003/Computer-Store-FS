@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Layout, Menu } from 'antd';
-import { UserOutlined, ShoppingOutlined, HeartOutlined, HistoryOutlined, LogoutOutlined } from '@ant-design/icons';
+import { UserOutlined, ShoppingOutlined, HeartOutlined, HistoryOutlined, LogoutOutlined, LockOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './Index.module.scss';
@@ -10,6 +10,7 @@ import Header from '../../Components/Header/Header';
 import InfoUser from './Components/InfoUser/InfoUser';
 import ManagerOrder from './Components/ManagerOrder/ManagerOrder';
 import ManagerProductWatch from './Components/ManagerProductWatch/ManagerProductWatch';
+import ChangePassword from './Components/ChangePassword/ChangePassword';
 import { requestLogout } from '../../config/request';
 import Footer from '../../Components/Footer/Footer';
 // import Wishlist from './Components/Wishlist/Wishlist';
@@ -66,6 +67,12 @@ function Index() {
             icon: <HeartOutlined />,
             label: 'Sản phẩm đã xem',
             onClick: () => handleMenuClick('wishlist', <ManagerProductWatch />),
+        },
+        {
+            key: 'change-password',
+            icon: <LockOutlined />,
+            label: 'Đổi mật khẩu',
+            onClick: () => handleMenuClick('change-password', <ChangePassword />),
         },
         {
             key: 'logout',

@@ -447,7 +447,13 @@ export const requestGetProductById = async (id) => {
 };
 
 export const requestUpdateUser = async (data) => {
-    const res = await request.post('/api/update-info-user', data);
+    // Get userId from localStorage or context
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+        throw new Error('User ID not found');
+    }
+    
+    const res = await request.put(`/api/users/${userId}`, data);
     return res.data;
 };
 
@@ -473,5 +479,17 @@ export const requestGetCartBuildPcUser = async () => {
 
 export const requestGetCart = async () => {
     const res = await request.get('/api/get-cart');
+    return res.data;
+};
+
+// ====== CHANGE PASSWORD FUNCTION ======
+export const requestChangePassword = async (data) => {
+    // Get userId from localStorage
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+        throw new Error('User ID not found');
+    }
+    
+    const res = await request.put(`/api/users/${userId}/change-password`, data);
     return res.data;
 };

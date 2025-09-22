@@ -15,6 +15,11 @@ public interface UserService {
     void updateInfoUser(UUID userId, String fullName, String address, String phone);
     
     /**
+     * Change user password
+     */
+    void changePassword(UUID userId, String currentPassword, String newPassword);
+    
+    /**
      * Update user role (admin function)
      */
     void updateRoleUser(UUID userId, String role);

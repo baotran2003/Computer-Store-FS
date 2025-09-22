@@ -81,7 +81,7 @@ public class UserController {
      * Update user information - PUT /api/users/{id}
      */
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<String>> updateUserInfo(
+    public ResponseEntity<ApiResponse<UserResponseDto>> updateUserInfo(
             @PathVariable UUID id,
             @Valid @RequestBody UserUpdateDto updateDto) {
         try {
@@ -92,15 +92,58 @@ public class UserController {
                 updateDto.getPhone()
             );
             
-            return ResponseEntity.ok(ApiResponse.success("Cập nhật thông tin user thành công"));
+            // Return updated user information
+            User updatedUser = userService.getUserById(id);
+            UserResponseDto userResponse = userMapper.toDto(updatedUser);
             
-        } catch (Exception e) {
+            return ResponseEntity.ok(ApiResponse.success("Cập nhật thông tin user thành công", userResponse));
+            
+        } catch (RuntimeException e) {
             log.error("Update user info error: ", e);
             return ResponseEntity.badRequest()
                     .body(ApiResponse.error(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Unexpected error during user update: ", e);
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Có lỗi xảy ra khi cập nhật thông tin. Vui lòng thử lại."));
         }
     }
+
+
     
+    /**
+     * Change user password - PUT /api/users/{id}/change-password
+     */
+    @PutMapping("/{id}/change-password")
+    public ResponseEntity<ApiResponse<String>> changePassword(
+            @PathVariable UUID id,
+            @Valid @RequestBody ChangePasswordDto changePasswordDto) {
+        try {
+            // Validate password confirmation
+            if (!changePasswordDto.getNewPassword().equals(changePasswordDto.getConfirmPassword())) {
+                return ResponseEntity.badRequest()
+                        .body(ApiResponse.error("Mật khẩu xác nhận không khớp"));
+            }
+            
+            userService.changePassword(
+                id,
+                changePasswordDto.getCurrentPassword(),
+                changePasswordDto.getNewPassword()
+            );
+            
+            return ResponseEntity.ok(ApiResponse.success("Thay đổi mật khẩu thành công"));
+            
+        } catch (RuntimeException e) {
+            log.error("Change password error: ", e);
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Unexpected error during password change: ", e);
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Có lỗi xảy ra khi thay đổi mật khẩu. Vui lòng thử lại."));
+        }
+    }
+
     /**
      * Update user role - PUT /api/users/{id}/role
      * Admin only endpoint
