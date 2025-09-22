@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -140,8 +141,17 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<ApiResponse<String>> forgotPassword(@RequestParam String email) {
+    public ResponseEntity<ApiResponse<String>> forgotPassword(@RequestBody Map<String, Object> request) {
         try {
+            String email = (String) request.get("email");
+            log.info("Received forgot password request for email: {}", email);
+            
+            // Validate email
+            if (email == null || email.trim().isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(ApiResponse.error("Email không được để trống"));
+            }
+            
             String refreshToken = passwordService.forgotPassword(email);
             return ResponseEntity.ok(ApiResponse.<String>success("Mã OTP đã được gửi đến email của bạn", refreshToken));
             
@@ -153,11 +163,12 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<ApiResponse<Void>> resetPassword(
-            @RequestParam String otp,
-            @RequestParam String newPassword,
-            @RequestParam String token) {
+    public ResponseEntity<ApiResponse<Void>> resetPassword(@RequestBody Map<String, Object> request) {
         try {
+            String otp = (String) request.get("otp");
+            String newPassword = (String) request.get("newPassword");
+            String token = (String) request.get("token");
+            
             passwordService.resetPassword(otp, newPassword, token);
             return ResponseEntity.ok(ApiResponse.success("Đặt lại mật khẩu thành công"));
             

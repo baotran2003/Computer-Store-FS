@@ -162,18 +162,15 @@ export const requestLoginGoogle = async (credential) => {
     return res.data;
 };
 
-export const requestForgotPassword = async (email) => {
-    const res = await request.post('/api/auth/forgot-password', null, {
-        params: { email }
-    });
+export const requestForgotPassword = async (data) => {
+    // Support both email string and object with email field
+    const email = typeof data === 'string' ? data : data.email;
+    const res = await request.post('/api/auth/forgot-password', { email });
     return res.data;
 };
 
 export const requestResetPassword = async (data) => {
-    const { otp, newPassword, token } = data;
-    const res = await request.post('/api/auth/reset-password', null, {
-        params: { otp, newPassword, token }
-    });
+    const res = await request.post('/api/auth/reset-password', data);
     return res.data;
 };
 
