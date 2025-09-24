@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.UUID;
+import com.example.ComputerStore.enumeric.ComponentType;
 
 @Entity
 @Table(name = "build_pc_carts")
@@ -32,6 +33,10 @@ public class BuildPcCart extends BaseEntity {
 
     @Column
     private String address;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "component_type")
+    private ComponentType componentType;
 
     // Relationships
     @ManyToOne

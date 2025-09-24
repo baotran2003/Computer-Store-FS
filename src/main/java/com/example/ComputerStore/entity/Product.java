@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.*;
+import com.example.ComputerStore.enumeric.ComponentType;
 
 @Entity
 @Table(name = "products")
@@ -60,8 +61,9 @@ public class Product extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String coolers;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "component_type", nullable = false)
-    private String componentType;
+    private ComponentType componentType;
 
     // Relationship
     @ManyToOne

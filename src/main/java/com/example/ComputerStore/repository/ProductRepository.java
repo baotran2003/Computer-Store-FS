@@ -1,6 +1,7 @@
 package com.example.ComputerStore.repository;
 
 import com.example.ComputerStore.entity.Product;
+import com.example.ComputerStore.enumeric.ComponentType;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -112,4 +113,56 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     // PC build compatible products by component type
     @Query("SELECT p FROM Product p WHERE p.componentType = :componentType AND p.stock > 0")
     List<Product> findPcBuildComponents(@Param("componentType") String componentType);
+    
+    // ========== ADDITIONAL METHODS FOR NODE.JS MIGRATION ==========
+    
+    /**
+     * Find products by ComponentType enum
+     */
+    List<Product> findByComponentType(ComponentType componentType);
+    
+    /**
+     * Find all products ordered by creation date desc
+     */
+    List<Product> findAllByOrderByCreatedAtDesc();
+    
+    /**
+     * Search products with filters (equivalent to NodeJS search functionality)
+     */
+    @Query("SELECT p FROM Product p WHERE " +
+           "(:keyword IS NULL OR :keyword = '' OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+           "AND (:minPrice IS NULL OR p.price >= :minPrice) " +
+           "AND (:maxPrice IS NULL OR p.price <= :maxPrice) " +
+           "AND (:productIds IS NULL OR p.id IN :productIds)")
+    List<Product> searchWithFilters(
+            @Param("keyword") String keyword,
+            @Param("minPrice") BigDecimal minPrice,
+            @Param("maxPrice") BigDecimal maxPrice,
+            @Param("productIds") List<UUID> productIds
+    );
+    
+    /**
+     * Search products by category with all filters
+     */
+    @Query("SELECT p FROM Product p WHERE " +
+           "(:categoryId IS NULL OR p.category.id = :categoryId) " +
+           "AND (:componentType IS NULL OR p.componentType = :componentType) " +
+           "AND (:keyword IS NULL OR :keyword = '' OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
+           "AND (:minPrice IS NULL OR p.price >= :minPrice) " +
+           "AND (:maxPrice IS NULL OR p.price <= :maxPrice) " +
+           "AND (:productIds IS NULL OR p.id IN :productIds)")
+    List<Product> searchByCategoryWithFilters(
+            @Param("categoryId") UUID categoryId,
+            @Param("componentType") ComponentType componentType,
+            @Param("keyword") String keyword,
+            @Param("minPrice") BigDecimal minPrice,
+            @Param("maxPrice") BigDecimal maxPrice,
+            @Param("productIds") List<UUID> productIds
+    );
+    
+    /**
+     * Find hot sale products (discount > threshold)
+     */
+    @Query("SELECT p FROM Product p WHERE p.discount > :threshold ORDER BY p.discount DESC")
+    List<Product> findHotSaleProductsByDiscount(@Param("threshold") Integer threshold);
 }
