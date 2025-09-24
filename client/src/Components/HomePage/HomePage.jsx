@@ -105,7 +105,7 @@ function HomePage() {
                     />
                 </div>
                 <Slider {...settings}>
-                    {productHotSale.map((product) => (
+                    {productHotSale && productHotSale.length > 0 && productHotSale.map((product) => (
                         <div className={cx('hot-sale-item')}>
                             <CardBody product={product} />
                         </div>
@@ -114,7 +114,7 @@ function HomePage() {
             </div>
 
             <div className={cx('category-list')}>
-                {category.map((item) => (
+                {category && category.length > 0 && category.map((item) => (
                     <div>
                         <div className={cx('category-item')} key={item.id}>
                             <h2>{item.category.name}</h2>
@@ -122,7 +122,7 @@ function HomePage() {
                         </div>
                         <div className={cx('slider-container')}>
                             <Slider {...settings}>
-                                {item.products.map((product) => (
+                                {item.products && item.products.length > 0 && item.products.map((product) => (
                                     <div>
                                         <CardBody product={product} />
                                     </div>

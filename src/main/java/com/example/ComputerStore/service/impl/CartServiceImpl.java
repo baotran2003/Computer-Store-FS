@@ -276,7 +276,8 @@ public class CartServiceImpl implements CartService {
         List<BuildPcCart> buildPcCartItems = buildPcCartRepository.findByUserId(userId);
         
         if (buildPcCartItems.isEmpty()) {
-            throw new RuntimeException("BuildPcCart trống");
+            log.info("BuildPcCart is empty for user: {}, no items to transfer", userId);
+            return; 
         }
         
         // Transfer each item
