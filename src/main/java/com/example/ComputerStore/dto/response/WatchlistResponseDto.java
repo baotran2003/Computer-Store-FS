@@ -1,5 +1,6 @@
 package com.example.ComputerStore.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,6 +28,7 @@ public class WatchlistResponseDto {
     private Integer stock;
     private Integer discount;
     private ComponentType componentType;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private LocalDateTime addedAt;
     
     // Category information

@@ -1,0 +1,15 @@
+# Gateway Configuration (Add to application.yml)
+payment:
+  momo:
+    partner-code: MOMO
+    access-key: F8BBA842ECF85
+    secret-key: K951B6PE1waDMi640xX08PD3vg6EkVlz
+    endpoint: https://test-payment.momo.vn/v2/gateway/api/create
+    redirect-url: http://localhost:8090/api/payments/callback/momo
+    ipn-url: http://localhost:8090/api/payments/callback/momo
+  
+  vnpay:
+    tmn-code: DH2F13SW
+    secret-key: NXZM3DWFR0LC4R5VBK85OJZS1UE9KI6F
+    endpoint: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+    return-url: http://localhost:8090/api/payments/callback/vnpay

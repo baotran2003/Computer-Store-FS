@@ -1,6 +1,7 @@
 package com.example.ComputerStore.dto.response;
 
 import com.example.ComputerStore.enumeric.ComponentType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class CartResponseDto {
     private String fullName;
     private String phone;
     private String address;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private LocalDateTime addedAt;
     
     // Product information

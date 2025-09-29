@@ -12,15 +12,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ProductService {
-    
-    /**
-     * Create new product
-     */
+
     ProductResponseDto createProduct(CreateProductDto createProductDto);
     
-    /**
-     * Get all products with pagination
-     */
     Page<ProductResponseDto> getAllProducts(Pageable pageable);
     
     /**
@@ -28,19 +22,10 @@ public interface ProductService {
      */
     List<ProductResponseDto> getAllProducts();
     
-    /**
-     * Get product by ID
-     */
     ProductResponseDto getProductById(UUID id);
     
-    /**
-     * Update product
-     */
     ProductResponseDto updateProduct(UUID id, UpdateProductDto updateProductDto);
-    
-    /**
-     * Delete product
-     */
+
     void deleteProduct(UUID id);
     
     /**

@@ -10,30 +10,14 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CategoryService {
-
-    /**
-     * Tạo danh mục mới
-     */
     CategoryResponseDto createCategory(CreateCategoryDto createCategoryDto);
 
-    /**
-     * Lấy tất cả danh mục
-     */
     List<CategoryResponseDto> getAllCategories();
 
-    /**
-     * Lấy danh mục theo ID
-     */
     CategoryResponseDto getCategoryById(UUID categoryId);
 
-    /**
-     * Cập nhật danh mục
-     */
     CategoryResponseDto updateCategory(UpdateCategoryDto updateCategoryDto);
 
-    /**
-     * Xóa danh mục
-     */
     void deleteCategory(UUID categoryId);
 
     /**

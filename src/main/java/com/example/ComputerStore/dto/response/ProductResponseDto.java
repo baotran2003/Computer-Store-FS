@@ -1,5 +1,6 @@
 package com.example.ComputerStore.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,7 +40,10 @@ public class ProductResponseDto {
     private String caseComputer;
     private String coolers;
     
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private LocalDateTime createdAt;
+    
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private LocalDateTime updatedAt;
     
     // Review statistics (sẽ tính sau)

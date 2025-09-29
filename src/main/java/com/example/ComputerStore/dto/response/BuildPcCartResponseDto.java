@@ -1,6 +1,7 @@
 package com.example.ComputerStore.dto.response;
 
 import com.example.ComputerStore.enumeric.ComponentType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,10 @@ public class BuildPcCartResponseDto {
     private Integer quantity;
     private BigDecimal totalPrice;
     private ComponentType componentType;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private LocalDateTime createdAt;
+    
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private LocalDateTime updatedAt;
     
     // Product information
