@@ -15,7 +15,6 @@ export function Provider({ children }) {
         try {
             const userId = localStorage.getItem('userId');
             if (!userId) {
-                console.log('No userId found in localStorage');
                 return;
             }
             
@@ -24,9 +23,6 @@ export function Provider({ children }) {
             // Handle Spring Boot ApiResponse format
             if (res.success && res.data) {
                 setDataUser(res.data);
-                console.log('User data loaded:', res.data);
-                console.log('User ID check:', res.data.id ? 'HAS ID' : 'NO ID');
-                console.log('User data keys:', Object.keys(res.data));
             } else {
                 console.error('Failed to get user data:', res);
             }
@@ -48,13 +44,15 @@ export function Provider({ children }) {
 
     const fetchCart = async () => {
         try {
-            const token = cookies.get('logged');
-            if (!token) {
+            const accessToken = localStorage.getItem('accessToken');
+            const userId = localStorage.getItem('userId');
+            if (!accessToken || !userId) {
                 setDataCart([]);
                 return;
             }
             const res = await requestGetCart();
-            setDataCart(res.metadata || []);
+            // Backend returns List<CartResponseDto> directly, not wrapped in ApiResponse
+            setDataCart(Array.isArray(res) ? res : []);
         } catch (error) {
             console.error('Error fetching cart:', error);
             setDataCart([]);
@@ -65,10 +63,8 @@ export function Provider({ children }) {
         const token = localStorage.getItem('accessToken');
         
         if (!token) {
-            console.log('No token found in localStorage');
             return;
         }
-        console.log('Token found, fetching user data...');
         fetchAuth();
         fetchCart();
     }, []);

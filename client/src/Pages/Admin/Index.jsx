@@ -34,9 +34,29 @@ function Admin() {
     useEffect(() => {
         const checkAdmin = async () => {
             try {
-                await requestAdmin();
+                // Check if user has access token
+                const accessToken = localStorage.getItem('accessToken');
+                if (!accessToken) {
+                    alert('Bạn cần đăng nhập để truy cập trang quản trị');
+                    navigate('/login');
+                    return;
+                }
+
+                // Call admin API to verify permissions
+                const response = await requestAdmin();
+                console.log('Admin access granted:', response);
             } catch (error) {
-                navigate('/');
+                console.error('Admin access denied:', error);
+                
+                if (error.response?.status === 403) {
+                    alert('Bạn không có quyền truy cập trang quản trị. Chỉ tài khoản Admin mới được phép.');
+                } else if (error.response?.status === 401) {
+                    alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+                } else {
+                    alert('Có lỗi xảy ra. Vui lòng thử lại sau.');
+                }
+                
+                navigate('/login');
             }
         };
         checkAdmin();

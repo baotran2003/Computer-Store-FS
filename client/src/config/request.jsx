@@ -241,7 +241,7 @@ export const requestGetProductPreviewUser = async (productId) => {
 };
 
 export const requestGetProductHotSale = async () => {
-    const res = await request.get('/api/products/hot-sale');
+    const res = await request.get('/api/get-product-hot-sale');
     return res.data;
 };
 
@@ -354,7 +354,11 @@ export const requestChatbot = async (data) => {
 
 // Product Functions
 export const requestAddToCart = async (data) => {
-    const res = await request.post('/api/add-to-cart', data);
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+        throw new Error('User not logged in');
+    }
+    const res = await request.post(`/api/cart/${userId}`, data);
     return res.data;
 };
 
@@ -475,7 +479,11 @@ export const requestGetCartBuildPcUser = async () => {
 };
 
 export const requestGetCart = async () => {
-    const res = await request.get('/api/get-cart');
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+        throw new Error('User not logged in');
+    }
+    const res = await request.get(`/api/cart/${userId}`);
     return res.data;
 };
 

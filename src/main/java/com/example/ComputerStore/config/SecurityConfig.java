@@ -41,8 +41,11 @@ public class SecurityConfig {
 
                         // Protected endpoints
                         .requestMatchers("/api/users/**").authenticated()
-                        .requestMatchers("/api/dashboard/**").authenticated()
+                        .requestMatchers("/api/dashboard/**").hasRole("ADMIN")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/create-product").hasRole("ADMIN")
+                        .requestMatchers("/api/update-product").hasRole("ADMIN")
+                        .requestMatchers("/api/delete-product").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
                 )

@@ -26,11 +26,10 @@ function Header() {
 
     const { dataUser, dataCart } = useStore();
 
-    // Debug authentication state
+    // Authentication state tracking
     useEffect(() => {
-        console.log('Header - dataUser:', dataUser);
-        console.log('Header - dataUser.id:', dataUser.id);
-        console.log('Header - Authentication check:', !dataUser.id ? 'NOT LOGGED IN' : 'LOGGED IN');
+        // Optional: Keep for debugging if needed
+        // console.log('Header - Authentication check:', !dataUser.id ? 'NOT LOGGED IN' : 'LOGGED IN');
     }, [dataUser]);
 
     const Navigate = useNavigate();

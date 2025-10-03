@@ -23,9 +23,10 @@ public class DashboardController {
     // ========== DASHBOARD & STATISTICS ENDPOINTS ==========
     
     /**
-     * Get dashboard stats - GET /api/dashboard/stats
+     * Get dashboard stats - GET /api/dashboard/stats (Admin only)
      */
     @GetMapping("/stats")
+    @org.springframework.security.access.prepost.PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Object>> getDashboardStats() {
         try {
             ApiResponse<Map<String, Object>> response = dashboardService.getDashboardStats();

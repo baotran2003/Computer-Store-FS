@@ -26,19 +26,34 @@ const cx = classNames.bind(styles);
 function HomePage() {
     const [category, setCategory] = useState([]);
     const [showBackToTop, setShowBackToTop] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const [productHotSale, setProductHotSale] = useState([]);
 
     const [blogs, setBlogs] = useState([]);
 
     const fetchBlogs = async () => {
-        const res = await requestGetBlogs();
-        setBlogs(res.metadata);
+        try {
+            const res = await requestGetBlogs();
+            if (res && res.metadata) {
+                setBlogs(res.metadata);
+            }
+        } catch (error) {
+            console.error('Error fetching blogs:', error);
+            setBlogs([]);
+        }
     };
 
     const fetchProductHotSale = async () => {
-        const res = await requestGetProductHotSale();
-        setProductHotSale(res);
+        try {
+            const res = await requestGetProductHotSale();
+            if (res && res.metadata) {
+                setProductHotSale(res.metadata);
+            }
+        } catch (error) {
+            console.error('Error fetching hot sale products:', error);
+            setProductHotSale([]);
+        }
     };
 
     useEffect(() => {
@@ -46,12 +61,29 @@ function HomePage() {
         window.scrollTo(0, 0);
 
         const fetchData = async () => {
-            const res = await requestGetProductsByCategories();
-            setCategory(res.metadata);
+            try {
+                setLoading(true);
+                const res = await requestGetProductsByCategories();
+                if (res && res.metadata) {
+                    setCategory(res.metadata);
+                }
+            } catch (error) {
+                console.error('Error fetching products by categories:', error);
+                setCategory([]);
+            } finally {
+                setLoading(false);
+            }
         };
-        fetchData();
-        fetchProductHotSale();
-        fetchBlogs();
+        
+        const loadAllData = async () => {
+            await Promise.all([
+                fetchData(),
+                fetchProductHotSale(),
+                fetchBlogs()
+            ]);
+        };
+        
+        loadAllData();
 
         // Add scroll event listener
         const handleScroll = () => {
@@ -78,6 +110,14 @@ function HomePage() {
     };
 
     const navigate = useNavigate();
+
+    if (loading) {
+        return (
+            <div className={cx('wrapper')} style={{ textAlign: 'center', padding: '50px' }}>
+                <div>Đang tải dữ liệu...</div>
+            </div>
+        );
+    }
 
     return (
         <div className={cx('wrapper')}>
@@ -106,7 +146,7 @@ function HomePage() {
                 </div>
                 <Slider {...settings}>
                     {productHotSale && productHotSale.length > 0 && productHotSale.map((product) => (
-                        <div className={cx('hot-sale-item')}>
+                        <div key={product.id} className={cx('hot-sale-item')}>
                             <CardBody product={product} />
                         </div>
                     ))}
@@ -115,15 +155,15 @@ function HomePage() {
 
             <div className={cx('category-list')}>
                 {category && category.length > 0 && category.map((item) => (
-                    <div>
-                        <div className={cx('category-item')} key={item.id}>
-                            <h2>{item.category.name}</h2>
-                            <button onClick={() => navigate(`/category/${item.category.id}`)}>Xem tất cả</button>
+                    <div key={item.category?.id || item.id}>
+                        <div className={cx('category-item')}>
+                            <h2>{item.category?.name || 'Unknown Category'}</h2>
+                            <button onClick={() => navigate(`/category/${item.category?.id}`)}>Xem tất cả</button>
                         </div>
                         <div className={cx('slider-container')}>
                             <Slider {...settings}>
                                 {item.products && item.products.length > 0 && item.products.map((product) => (
-                                    <div>
+                                    <div key={product.id}>
                                         <CardBody product={product} />
                                     </div>
                                 ))}
